@@ -19,7 +19,8 @@
 //         import MovieList from './components/movieList';
 //         import HomePage from './components/homePage';
 
-// 6. import { Link } from 'react-router-dom'; di setiap component yg mau di Link
+// 6. import { Link } from 'react-router-dom'; 
+//     di setiap component yg mau di Link
 //     create link di tempat yg kita mau
 //     <Link to="/albumlist">
 //         Album List

@@ -1,8 +1,33 @@
 import React, { Component } from 'react';
-import '../supports/css/components/loginPage.css'
+import { connect } from 'react-redux';
+import { onLoginSuccess } from '../actionCreator';
+import '../supports/css/components/loginPage.css';
 
 class loginPage extends Component {
+    onLoginClick = () => {
+        let email = this.refs.email.value;
+        let password = this.refs.password.value;
+        let username = "";
+        let check= false;
+        
+        for (let index in this.props.usersFriendly) {
+            if(this.props.usersFriendly[index].email == email && 
+               this.props.usersFriendly[index].password == password)
+            {
+                check = true;
+                username = this.props.usersFriendly[index].username;
+                break;
+            }
+        }
+
+        if( check ) {
+            this.props.onLoginSuccess({ username, email});
+        }
+    }
+
     render() {
+        console.log(this.props.usersFriendly);
+        console.log(this.props.theAuth);
         return(
             <div className="login-background">
             <div className="container">
@@ -18,18 +43,18 @@ class loginPage extends Component {
                     <form id="Login">
 
                         <div className="form-group">
-                            <input type="email" className="form-control" id="inputEmail" placeholder="Email Address" />
+                            <input type="email" ref="email" className="form-control" id="inputEmail" placeholder="Email Address" />
                         </div>
 
                         <div className="form-group">
-                            <input type="password" className="form-control" id="inputPassword" placeholder="Password" />
+                            <input type="password" ref="password" className="form-control" id="inputPassword" placeholder="Password" />
                         </div>
 
                         <div className="forgot">
                             <a href="reset.html">Forgot password?</a>
                         </div>
 
-                        <button type="submit" className="btn btn-primary">Login</button>
+                        <input type="button" className="btn btn-primary" value="Login" onClick={this.onLoginClick} />
 
                     </form>
                     
@@ -43,4 +68,12 @@ class loginPage extends Component {
     }
 }
 
-export default loginPage;
+const mapStateToProps = (state) => {
+    console.log(state);
+    const users = state.users;
+    const auth = state.auth;
+
+    return { usersFriendly: users, theAuth: auth };
+}
+
+export default connect(mapStateToProps, { onLoginSuccess })(loginPage);
