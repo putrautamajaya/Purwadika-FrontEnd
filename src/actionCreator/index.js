@@ -68,3 +68,15 @@ export const onRegister = (user) => {
 //         })
 //     };
 // }
+
+export const onMovieRegister = (movie) => {
+    return (dispatch) => {
+        axios.post(API_URL_1 + '/movies', movie)
+        .then((response) => {
+            console.log(response);
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+    };
+}
