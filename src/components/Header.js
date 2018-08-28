@@ -2,8 +2,12 @@ import React, { Component } from 'react';
 import { Nav, Navbar, NavItem, NavDropdown, MenuItem } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { onLogout } from '../actionCreator'
 
 class Header extends Component {
+    onLogOutClick = () => {
+        this.props.onLogout();
+    }
 
     renderNavbar = () => {
         if (this.props.auth.username != "") {
@@ -36,14 +40,28 @@ class Header extends Component {
                                     <MenuItem divider />
                                     <MenuItem eventKey={3.3}>Kutang</MenuItem>
                                 </NavDropdown>
+
+                                <NavItem eventKey={5} href="#">
+                                    <Link to="/moviemanage">
+                                        Movie Manage
+                                    </Link>
+                                </NavItem>
                             </Nav>
 
                             <Nav pullRight>
-                                <NavItem eventKey={1} href="#">
+                                {/* <NavItem eventKey={1} href="#">
                                     Hello, {this.props.auth.username}
-                                </NavItem>
+                                </NavItem> */}
+                                <NavDropdown eventKey={4} title={"Hello, " + this.props.auth.username} id="basic-nav-dropdown">
+                                    <MenuItem eventKey={4.1}>Profile</MenuItem>
+                                    <MenuItem divider />
+                                    <MenuItem eventKey={4.2} onSelect= {this.onLogOutClick}>Log Out</MenuItem> 
+                                </NavDropdown>
                                 
                             </Nav>
+
+                            
+
                         </Navbar.Collapse>
 
                     </Navbar> );
@@ -109,4 +127,4 @@ const mapStateToProps = (state) => {
     return { auth };
 }
 
-export default connect(mapStateToProps)(Header);
+export default connect(mapStateToProps, { onLogout })(Header);

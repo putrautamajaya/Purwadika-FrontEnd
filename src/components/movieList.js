@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { API_URL_1 } from '../supports/API-url/apiurl';
+import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 
 class movieList extends Component {
@@ -22,17 +24,24 @@ class movieList extends Component {
 
     render () {
         console.log(this.state.albums);
-        return (
-            <div>
-                <h1>ini movieList</h1>
-                
-                <div className='displayGrid'>
-                    {this.renderMovieList()}
+        if(this.props.auth.username != ""){
+            return (
+                <div>
+                    <h1>ini movieList</h1>
+                    
+                    <div className='displayGrid'>
+                        {this.renderMovieList()}
+                    </div>
                 </div>
-            </div>
-            
-        );
+                
+            );
+        }
+        
+        return <Redirect to="/login" />
     }
 }
+const mapStateToProps = (state) => {
+    return {auth: state.auth};
+}
 
-export default movieList;
+export default connect(mapStateToProps)(movieList);

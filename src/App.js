@@ -7,7 +7,7 @@ import { Route } from 'react-router-dom';
 import HomePage from './components/homePage';
 import LoginPage from './components/loginPage';
 import RegisterPage from './components/registerPage';
-
+import MovieManage from './components/movieManage';
 
 class App extends Component {
   state = { kucingIn: false, namaKucing: "Briana"}
@@ -38,6 +38,7 @@ class App extends Component {
           <Route path="/movielist" component={ MovieList }/>
           <Route path="/login" component={ LoginPage }/>
           <Route path="/register" component={ RegisterPage }/>
+          <Route path="/moviemanage" component={ MovieManage }/>
         </div>
 
         {/* <input type="button" className="btn btn-success" value="Login" onClick={this.onClickBtnPress}/>
