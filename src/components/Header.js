@@ -49,9 +49,7 @@ class Header extends Component {
                             </Nav>
 
                             <Nav pullRight>
-                                {/* <NavItem eventKey={1} href="#">
-                                    Hello, {this.props.auth.username}
-                                </NavItem> */}
+        
                                 <NavDropdown eventKey={4} title={"Hello, " + this.props.auth.username} id="basic-nav-dropdown">
                                     <MenuItem eventKey={4.1}>Profile</MenuItem>
                                     <MenuItem divider />
