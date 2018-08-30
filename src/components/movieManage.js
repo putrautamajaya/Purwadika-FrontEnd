@@ -3,38 +3,67 @@ import axios from 'axios';
 import { API_URL_1 } from '../supports/API-url/apiurl';
 import { connect } from 'react-redux';
 import { onMovieRegister } from '../actionCreator';
+import MovieManageDetail from './movieManageDetail';
 
 
 class movieManage extends Component {
-    state = { listOfMovie: [] }
+    state = { listOfMovie: [],
+            selectEditID: '',
+    }
+
+    getMovieList = () => {
+        axios.get( API_URL_1 + "/movies" )
+        .then( movie => {
+            console.log(movie);
+            this.setState({ listOfMovie: movie.data });
+        });
+    }
 
     componentWillMount() {
-        axios.get( API_URL_1 + "/movies" )
-            .then( movie => {
-                console.log(movie);
-                this.setState({ listOfMovie: movie.data });
-            });
+        this.getMovieList();
     }
 
     renderMovieList = () => {
         return this.state.listOfMovie.map( movie => 
-        <tr>
-            <td><img style={{width: "100px"}} src={movie.url}/></td>
-            <td>{movie.id}</td>
-            <td>{movie.title}</td>
-            <td>{movie.description}</td>
-            <td>{movie.url}</td>
-            <td>
-                <input type="button" className="btn btn-warning" value="Edit" onClick={() => this.onEditClick(movie.id)}/>
-            </td>
-            <td>
-                <input type="button" className="btn btn-danger" value="Delete" onClick={() => this.onDeleteClick(movie.id)}/>
-            </td>
-        </tr>
-        );
+        <MovieManageDetail 
+            key={movie.id} 
+            id={movie.id} 
+            title={movie.title} 
+            description={movie.description} 
+            url={movie.url}
+            fnDelete={() => this.onDeleteClick(movie.id)}
+            fnEdit={() => this.onEditClick(movie.id)}
+            selectedID = {this.state.selectEditID}
+            fnUpdate = {(refs) => this.onUpdateClick(movie.id, refs)}
+        />);
+    }
+
+    onUpdateClick = (id, refs) => {
+        console.log(id, refs);
+        axios.put(API_URL_1 + "/movies/" + id, {
+            title: refs.titleUpdate.value,
+            description: refs.desriptionUpdate.value,
+            url: refs.urlUpdate.value
+        })
+        .then((Response) => {
+            alert("Update Success!");
+            console.log(Response);
+            this.setState({ selectEditID: "" });
+            this.getMovieList();
+        })
+        .catch((error) => {
+            alert("Terjadi Error!");
+            console.log(error);
+        })
+    }
+
+    onEditClick(id) {
+        this.setState({selectEditID : id});
+
     }
 
     onDaftarClick = () => {
+        
         axios.post(API_URL_1 + '/movies', {
             title: this.refs.title.value,
             description: this.refs.description.value,
@@ -42,38 +71,11 @@ class movieManage extends Component {
         })
         .then((response) => {
             console.log(response);
-            axios.get( API_URL_1 + "/movies" )
-            .then( movie => {
-                console.log(movie);
-                this.setState({ listOfMovie: movie.data });
-            });
-            
+            alert("Add Success!");
+
+            this.getMovieList();
         })
         .catch((error) => {
-            console.log(error);
-        })
-    }
-
-    onEditClick(id) {
-        //axios.put gunany untuk ngedit
-        axios.put(API_URL_1 + "/movies/" + id, {
-            title: "spongebob",
-            description: "spons kuning",
-            url: ""
-        })
-        .then((Response) => {
-            alert("Edit Success!");
-            console.log(Response);
-
-            axios.get( API_URL_1 + "/movies" )
-            .then( movie => {
-                console.log(movie);
-                this.setState({ listOfMovie: movie.data });
-            });
-            
-        })
-        .catch((error) => {
-            alert("Terjadi Error!");
             console.log(error);
         })
     }
@@ -84,11 +86,7 @@ class movieManage extends Component {
             alert("Delete Success!");
             console.log(Response);
 
-            axios.get( API_URL_1 + "/movies" )
-            .then( movie => {
-                console.log(movie);
-                this.setState({ listOfMovie: movie.data });
-            });
+            this.getMovieList();
         })
         .catch((error) => {
             alert("Delete Error!");
@@ -97,6 +95,7 @@ class movieManage extends Component {
     }
 
     render() {
+        console.log(this.state.selectEditID);
         return (
             <div className="container text-left">
 
