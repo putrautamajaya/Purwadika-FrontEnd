@@ -2,14 +2,36 @@ import React, { Component } from 'react';
 import { Nav, Navbar, NavItem, NavDropdown, MenuItem } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { onLogout } from '../actionCreator'
+import { onLogout, keepLogin, cookieCheck } from '../actionCreator'
+import Cookies from 'universal-cookie';
+
+const cookies = new Cookies();
 
 class Header extends Component {
+
+    componentWillMount(){
+        const cookieNya = cookies.get('bertasbihCat');
+          if(cookieNya !== undefined) {
+              this.props.keepLogin(cookieNya);
+              console.log('masuk ke keeplogin');
+          }
+          else if (cookieNya === undefined) {
+              this.props.cookieCheck();
+              console.log('masuk ke cookieCheck');
+          }
+      }
+
     onLogOutClick = () => {
         this.props.onLogout();
+        cookies.remove('bertasbihCat')
+        this.props.cookieCheck();
     }
 
     renderNavbar = () => {
+        console.log(this.props.auth);
+
+        if ( this.props.auth.cookieCheck === true ) {
+        
         if (this.props.auth.username != "") {
             return ( <Navbar fixedTop={true} inverse collapseOnSelect>
                         <Navbar.Header>
@@ -112,6 +134,8 @@ class Header extends Component {
 
                 </Navbar> );
     }
+        return <h1></h1>;
+    }
 
     render() {
         return (
@@ -125,4 +149,4 @@ const mapStateToProps = (state) => {
     return { auth };
 }
 
-export default connect(mapStateToProps, { onLogout })(Header);
+export default connect(mapStateToProps, { onLogout, keepLogin, cookieCheck })(Header);

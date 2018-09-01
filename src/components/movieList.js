@@ -24,6 +24,9 @@ class movieList extends Component {
 
     render () {
         console.log(this.state.albums);
+        if(this.props.auth.cookieCheck === true) {
+            
+        }
         if(this.props.auth.username != ""){
             return (
                 <div>

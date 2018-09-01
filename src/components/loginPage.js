@@ -1,11 +1,21 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { onLogin } from '../actionCreator';
-
+import { onLogin, cookieCheck } from '../actionCreator';
+import Cookies from 'universal-cookie';
 import '../supports/css/components/loginPage.css';
 
+const cookies = new Cookies();
+
 class loginPage extends Component {
+    //terima props baru dan props lama.
+    componentWillReceiveProps(newProps) {
+        if(newProps.auth.username !== "") {
+            cookies.set('bertasbihCat', newProps.auth.email, {path:'/'})
+            this.props.cookieCheck();
+        }
+    }
+    
 
     onLoginClick = () => {
         let email = this.refs.email.value;
@@ -68,4 +78,4 @@ const mapStateToProps = (state) => {
     return { auth: auth };
 }
 
-export default connect(mapStateToProps, { onLogin })(loginPage);
+export default connect(mapStateToProps, { onLogin, cookieCheck })(loginPage);

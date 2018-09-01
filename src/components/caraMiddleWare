@@ -1,0 +1,8 @@
+1. di src index.js ketik ini:
+
+    import { createStore, applyMiddleware } from 'redux';
+    import ReduxThunk from 'redux-thunk';
+
+2. ganti const storeny jadi:
+
+    const store = createStore( reducers, {}, applyMiddleware(ReduxThunk));
